@@ -45,7 +45,7 @@ int main(int argc, char** argv){
   rval = MBI->coords_iterate(all_verts.begin(), all_verts.end(), x_vals, y_vals, z_vals, n_vertices);
   MB_CHK_SET_ERR(rval, "Failed to get coordinate pointers");
 
-  size_t n_samples = 1000000;
+  size_t n_samples = 10000000;
 
   // write binary file if indicated by "-w" flag
   bool write_vals = argc > 1 && std::string(argv[1]) == "-w";
@@ -115,7 +115,6 @@ int main(int argc, char** argv){
 
       results[i] = ss.str();
     }
-
   }
   t.stop();
 

@@ -28,7 +28,7 @@ int main(int argc, char** argv){
   // write binary file if indicated by "-w" flag
   bool write_vals = argc > 1 && std::string(argv[1]) == "-w";
 
-  size_t n_samples = 10000000;
+  size_t n_samples = 100000000;
 
   Timer t;
   std::cout << "Running " << n_samples << " samples." << std::endl;
