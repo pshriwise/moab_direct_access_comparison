@@ -32,16 +32,22 @@ int main(int argc, char** argv){
 
   Timer t;
   std::cout << "Running " << n_samples << " samples." << std::endl;
+
+  // vector holding a random set of indices to use as samples
+  std::vector<size_t> random_indices(n_samples);
   srand(100); // ensure random number sequence is the same
+  for(int i = 0; i < n_samples; i++) {
+    random_indices.at(i) = rand() % all_tris.size();
+  }
 
   std::vector<std::string> results(n_samples);
 
   t.start();
-  #pragma omp parallel for
+  #pragma omp parallel for shared(MBI, write_vals, random_indices, results)
   for(size_t i = 0; i < n_samples; i++) {
 
-    // generate a random index
-    size_t idx = rand() % all_tris.size();
+    // get random index for this sample
+    size_t idx = random_indices[i];
 
     // query the triangle connectivity
     moab::EntityHandle eh = all_tris[idx];
