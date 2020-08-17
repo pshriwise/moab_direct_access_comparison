@@ -10,3 +10,5 @@ interface: interface.cpp timer
 
 direct_access: direct_access.cpp timer
 	g++ -g direct_access.cpp timer.cpp -I${MOAB_DIR}/include -L${MOAB_DIR}/lib -lMOAB -fopenmp -o direct_access
+
+all: interface direct_access
