@@ -10,7 +10,7 @@ timer: timer.cpp
 	g++ -c timer.cpp
 
 interface: interface.cpp timer moab_dir
-	g++ interface.cpp timer.cpp -I${MOAB_DIR}/include -L${MOAB_DIR}/lib -lMOAB -fopenmp -o interface
+	g++ interface.cpp timer.cpp -I${MOAB_DIR}/include -L${MOAB_DIR}/lib -lMOAB -fopenmp -Wl,-rpath=${MOAB_DIR}/lib -o interface
 
 direct_access: direct_access.cpp timer moab_dir
-	g++ direct_access.cpp timer.cpp -I${MOAB_DIR}/include -L${MOAB_DIR}/lib -lMOAB -fopenmp -o direct_access
+	g++ direct_access.cpp timer.cpp -I${MOAB_DIR}/include -L${MOAB_DIR}/lib -lMOAB -fopenmp -Wl,-rpath=${MOAB_DIR}/lib -o direct_access
