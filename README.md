@@ -42,3 +42,16 @@ Below are links to two models commonly used for benchmarking DAGMC performance:
 
   - [Frascati Neutron Generator (FNG)](https://anl.box.com/shared/static/2nmrf3vpu1n8bpcadjqaf884vc65y8h5.h5m)
   - [Advanced Test Reactor (ATR)](https://anl.box.com/shared/static/w57ambhcijysdns573jnor4215zg28mh.h5m)
+
+
+## Initial Results
+
+The following tests were performed with Intel(R) Xeon(R) Platinum 8260 CPU @ 2.40GHz with 96 cores.
+
+### ATR
+
+![](results/atr/scaling_comparison.png)
+
+### FNG
+
+![](results/fng/scaling_comparison.png)
