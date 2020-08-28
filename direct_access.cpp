@@ -1,4 +1,3 @@
-
 #include <fstream>
 #include <iostream>
 #include <memory>
@@ -28,7 +27,7 @@ int main(int argc, char** argv){
 
   // get direct access pointers
   moab::EntityHandle* conn_ptr;
-  moab::EntityHandle first_element = all_tris.front();
+  moab::EntityHandle first_tri = all_tris.front();
   int stride, n_tris;
   rval = MBI->connect_iterate(all_tris.begin(), all_tris.end(), conn_ptr, stride, n_tris);
   MB_CHK_SET_ERR(rval, "Failed to get connectivity pointer");
@@ -40,6 +39,7 @@ int main(int argc, char** argv){
   moab::Range all_verts;
   rval = MBI->get_entities_by_dimension(0, 0, all_verts);
   MB_CHK_SET_ERR(rval, "Failed to get all vertices in the model");
+  moab::EntityHandle first_vert = all_verts.front();
 
   int n_vertices;
   rval = MBI->coords_iterate(all_verts.begin(), all_verts.end(), x_vals, y_vals, z_vals, n_vertices);
@@ -63,37 +63,36 @@ int main(int argc, char** argv){
   std::vector<std::string> results(n_samples);
 
   t.start();
-  #pragma omp parallel for shared(MBI, write_vals, random_indices, results)
+#pragma omp parallel for shared(MBI, write_vals, random_indices, results)
   for(size_t i = 0; i < n_samples; i++) {
 
     // get random index for this sample
     size_t idx = random_indices[i];
 
-    // query the triangle connectivity
-    moab::EntityHandle eh = all_tris[idx];
+    moab::EntityHandle eh = first_tri + idx;
 
-    moab::Range conn;
-    size_t offset = stride * (eh - all_tris.front());
+    size_t offset = stride * (eh - first_tri);
 
     moab::EntityHandle v0 = conn_ptr[offset];
     moab::EntityHandle v1 = conn_ptr[offset + 1];
     moab::EntityHandle v2 = conn_ptr[offset + 2];
 
-    // MOAB's EntityHandle generation starts at one, but C++
-    // arrays start at zero
-    // handle off-by-one when determining the coordinates
+    moab::EntityHandle v0idx = v0 - first_vert;
+    moab::EntityHandle v1idx = v1 - first_vert;
+    moab::EntityHandle v2idx = v2 - first_vert;
+
     double coords[3][3];
-    coords[0][0] = x_vals[v0 - 1];
-    coords[0][1] = y_vals[v0 - 1];
-    coords[0][2] = z_vals[v0 - 1];
+    coords[0][0] = x_vals[v0idx];
+    coords[0][1] = y_vals[v0idx];
+    coords[0][2] = z_vals[v0idx];
 
-    coords[1][0] = x_vals[v1 - 1];
-    coords[1][1] = y_vals[v1 - 1];
-    coords[1][2] = z_vals[v1 - 1];
+    coords[1][0] = x_vals[v1idx];
+    coords[1][1] = y_vals[v1idx];
+    coords[1][2] = z_vals[v1idx];
 
-    coords[2][0] = x_vals[v2 - 1];
-    coords[2][1] = y_vals[v2 - 1];
-    coords[2][2] = z_vals[v2 - 1];
+    coords[2][0] = x_vals[v2idx];
+    coords[2][1] = y_vals[v2idx];
+    coords[2][2] = z_vals[v2idx];
 
     // write values if requested
     if (write_vals) {
