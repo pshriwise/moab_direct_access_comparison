@@ -73,26 +73,22 @@ int main(int argc, char** argv){
 
     size_t offset = stride * (eh - first_tri);
 
-    moab::EntityHandle v0 = conn_ptr[offset];
-    moab::EntityHandle v1 = conn_ptr[offset + 1];
-    moab::EntityHandle v2 = conn_ptr[offset + 2];
-
-    moab::EntityHandle v0idx = v0 - first_vert;
-    moab::EntityHandle v1idx = v1 - first_vert;
-    moab::EntityHandle v2idx = v2 - first_vert;
+    moab::EntityHandle v0 = conn_ptr[offset] - first_vert;
+    moab::EntityHandle v1 = conn_ptr[offset + 1] - first_vert;
+    moab::EntityHandle v2 = conn_ptr[offset + 2] - first_vert;
 
     double coords[3][3];
-    coords[0][0] = x_vals[v0idx];
-    coords[0][1] = y_vals[v0idx];
-    coords[0][2] = z_vals[v0idx];
+    coords[0][0] = x_vals[v0];
+    coords[0][1] = y_vals[v0];
+    coords[0][2] = z_vals[v0];
 
-    coords[1][0] = x_vals[v1idx];
-    coords[1][1] = y_vals[v1idx];
-    coords[1][2] = z_vals[v1idx];
+    coords[1][0] = x_vals[v1];
+    coords[1][1] = y_vals[v1];
+    coords[1][2] = z_vals[v1];
 
-    coords[2][0] = x_vals[v2idx];
-    coords[2][1] = y_vals[v2idx];
-    coords[2][2] = z_vals[v2idx];
+    coords[2][0] = x_vals[v2];
+    coords[2][1] = y_vals[v2];
+    coords[2][2] = z_vals[v2];
 
     // write values if requested
     if (write_vals) {
@@ -101,10 +97,14 @@ int main(int argc, char** argv){
       // the entity we're querying
       ss.write((const char*)&eh, sizeof(moab::EntityHandle));
 
+      moab::EntityHandle v0_out = v0 + first_vert;
+      moab::EntityHandle v1_out = v1 + first_vert;
+      moab::EntityHandle v2_out = v2 + first_vert;
+
       // the connectivity of that entity
-      ss.write((const char*)&v0, sizeof(moab::EntityHandle));
-      ss.write((const char*)&v1, sizeof(moab::EntityHandle));
-      ss.write((const char*)&v2, sizeof(moab::EntityHandle));
+      ss.write((const char*)&v0_out, sizeof(moab::EntityHandle));
+      ss.write((const char*)&v1_out, sizeof(moab::EntityHandle));
+      ss.write((const char*)&v2_out, sizeof(moab::EntityHandle));
 
       for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
